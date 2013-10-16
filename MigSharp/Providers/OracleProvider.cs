@@ -381,7 +381,9 @@ namespace MigSharp.Providers
 
         private static string Escape(string name)
         {
-            return string.Format(CultureInfo.InvariantCulture, "\"{0}\"", name);
+            //TODO:ORION Utilizar configuração para decidir se coloca aspas no nome da tabela ou não
+            //return string.Format(CultureInfo.InvariantCulture, "\"{0}\"", name);
+            return string.Format(CultureInfo.InvariantCulture, "{0}", name);
         }
 
         private static string GetTypeSpecifier(DataType type)
