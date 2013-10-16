@@ -66,7 +66,9 @@ namespace MigSharp.Providers
             {
                 yield return string.Format(CultureInfo.InvariantCulture, @" CONSTRAINT ""{0}"" PRIMARY KEY ({1})",
                     primaryKeyConstraintName,
-                    string.Join(", ", columns.Where(c => c.IsPrimaryKey).Select(c => "\"" + c.Name + "\"").ToArray()));
+                    //TODO:ORION Alteração temporaria
+                    //string.Join(", ", columns.Where(c => c.IsPrimaryKey).Select(c => "\"" + c.Name + "\"").ToArray()));
+                    string.Join(", ", columns.Where(c => c.IsPrimaryKey).Select(c => "" + c.Name + "").ToArray()));
             }
         }
 

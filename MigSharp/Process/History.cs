@@ -42,7 +42,7 @@ namespace MigSharp.Process
         {
             IDbCommand command = connection.CreateCommand();
             command.Transaction = transaction;
-            command.CommandText = string.Format(CultureInfo.InvariantCulture, "SELECT \"{0}\", \"{1}\", \"{2}\" FROM \"{3}\"",
+            command.CommandText = string.Format(CultureInfo.InvariantCulture, "SELECT  {0} ,  {1} ,  {2}  FROM  {3}",
                 BootstrapMigration.TimestampColumnName,
                 BootstrapMigration.ModuleColumnName,
                 BootstrapMigration.TagColumnName,
@@ -80,7 +80,7 @@ namespace MigSharp.Process
                 string moduleName = entry.ModuleName;
                 IDataParameter moduleNameParameter = command.AddParameter("@ModuleName", DbType.String, moduleName);
                 long timestamp = entry.Timestamp;
-                command.CommandText = string.Format(CultureInfo.InvariantCulture, "DELETE FROM \"{0}\" WHERE \"{1}\" = {2} AND \"{3}\" = {4}",
+                command.CommandText = string.Format(CultureInfo.InvariantCulture, "DELETE FROM {0} WHERE  {1}  = {2} AND  {3}  = {4}",
                     _tableName,
                     BootstrapMigration.TimestampColumnName,
                     timestamp.ToString(CultureInfo.InvariantCulture),
@@ -99,7 +99,7 @@ namespace MigSharp.Process
                 command.Transaction = transaction;
                 IDataParameter moduleNameParameter = command.AddParameter("@ModuleName", DbType.String, entry.ModuleName);
                 IDataParameter tagParameter = command.AddParameter("@Tag", DbType.String, !string.IsNullOrEmpty(entry.Tag) ? (object)entry.Tag : DBNull.Value);
-                command.CommandText = string.Format(CultureInfo.InvariantCulture, @"INSERT INTO ""{0}"" (""{1}"", ""{2}"", ""{3}"") VALUES ({4}, {5}, {6})",
+                command.CommandText = string.Format(CultureInfo.InvariantCulture, @"INSERT INTO {0} ({1}, {2}, {3}) VALUES ({4}, {5}, {6})",
                     _tableName,
                     BootstrapMigration.TimestampColumnName,
                     BootstrapMigration.ModuleColumnName,

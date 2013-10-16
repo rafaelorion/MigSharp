@@ -30,7 +30,7 @@ namespace MigSharp.Providers
 
         public string ExistsTable(string databaseName, string tableName)
         {
-            return string.Format(CultureInfo.InvariantCulture, @"SELECT COUNT(*) FROM ALL_TABLES WHERE TABLE_NAME = '{0}' AND OWNER = USER", tableName);
+            return string.Format(CultureInfo.InvariantCulture, @"SELECT COUNT(*) FROM ALL_TABLES WHERE UPPER(TABLE_NAME) = UPPER('{0}') AND OWNER = USER", tableName);
         }
 
         public string ConvertToSql(object value, DbType targetDbType)
@@ -70,7 +70,9 @@ namespace MigSharp.Providers
 
             if (primaryKeyColumns.Count > 0)
             {
-                commandText += string.Format(CultureInfo.InvariantCulture, "{0} , CONSTRAINT \"{1}\" PRIMARY KEY {2}",
+                //TODO:ORION Alteração temporaria
+                //commandText += string.Format(CultureInfo.InvariantCulture, "{0} , CONSTRAINT \"{1}\" PRIMARY KEY {2}",
+                commandText += string.Format(CultureInfo.InvariantCulture, "{0} , CONSTRAINT {1} PRIMARY KEY {2}",
                     Environment.NewLine,
                     primaryKeyConstraintName,
                     Environment.NewLine);
@@ -93,7 +95,9 @@ namespace MigSharp.Providers
                 .Where(c => !string.IsNullOrEmpty(c.UniqueConstraint))
                 .GroupBy(c => c.UniqueConstraint))
             {
-                commandText += string.Format(CultureInfo.InvariantCulture, ",{0} CONSTRAINT \"{1}\" UNIQUE {2}",
+                //TODO:ORION Alteração temporaria
+                //commandText += string.Format(CultureInfo.InvariantCulture, ",{0} CONSTRAINT \"{1}\" UNIQUE {2}",
+                commandText += string.Format(CultureInfo.InvariantCulture, ",{0} CONSTRAINT {1} UNIQUE {2}",
                     Environment.NewLine,
                     uniqueColumns.Key,
                     Environment.NewLine);
@@ -115,7 +119,7 @@ namespace MigSharp.Providers
             if (!String.IsNullOrEmpty(identityColumn))
             {
                 string sequenceName = GetSequenceName(tableName);
-                string createSequence = string.Format(CultureInfo.InvariantCulture, @"CREATE SEQUENCE ""{0}"" MINVALUE 1 START WITH 1 INCREMENT BY 1 CACHE 20 ORDER NOCYCLE",
+                string createSequence = string.Format(CultureInfo.InvariantCulture, @"CREATE SEQUENCE {0} MINVALUE 1 START WITH 1 INCREMENT BY 1 CACHE 20 ORDER NOCYCLE",
                     sequenceName);
                 string createTrigger = CreateTrigger(tableName, identityColumn, sequenceName);
                 comands = new List<string> { createSequence, commandText, createTrigger };
@@ -126,7 +130,7 @@ namespace MigSharp.Providers
 
         private static string CreateTrigger(string tableName, string identityColumn, string sequenceName)
         {
-            return string.Format(CultureInfo.InvariantCulture, @"CREATE TRIGGER ""{0}"" BEFORE INSERT ON {1} FOR EACH ROW BEGIN SELECT ""{3}"".NEXTVAL into :new.{2} FROM dual; END;",
+            return string.Format(CultureInfo.InvariantCulture, @"CREATE TRIGGER {0} BEFORE INSERT ON {1} FOR EACH ROW BEGIN SELECT {3}.NEXTVAL into :new.{2} FROM dual; END;",
                 GetTriggerName(tableName),
                 Escape(tableName),
                 Escape(identityColumn),
@@ -149,7 +153,7 @@ namespace MigSharp.Providers
 
             // drop associated SEQUENCE (if it exists); the TRIGGER is dropped automatically by Oracle
             // Oracle Database Error Code ORA-02289: sequence does not exist
-            yield return string.Format(CultureInfo.InvariantCulture, @"BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE ""{0}""'; EXCEPTION WHEN OTHERS THEN IF SQLCODE = -2289 THEN NULL; ELSE RAISE; END IF; END;", // see: http://frankschmidt.blogspot.com/2009/12/drop-table-if-exists-or-sequence-or.html
+            yield return string.Format(CultureInfo.InvariantCulture, @"BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE {0}'; EXCEPTION WHEN OTHERS THEN IF SQLCODE = -2289 THEN NULL; ELSE RAISE; END IF; END;", // see: http://frankschmidt.blogspot.com/2009/12/drop-table-if-exists-or-sequence-or.html
                 GetSequenceName(tableName));
         }
 
@@ -259,36 +263,35 @@ namespace MigSharp.Providers
         public IEnumerable<string> AlterColumn(string tableName, Column column)
         {
             string query = @"declare 
-                             l_nullable varchar2(1);
-                             l_datatype varchar2(106);
-                            begin
-                              select 
-                                    nullable into l_nullable
-                                    
-                              from user_tab_columns
-                              where table_name = '{0}'
-                              and   column_name = '{1}';
-
-                              select 
-                                     data_type into l_datatype
-                              from user_tab_columns
-                              where table_name = '{0}'
-                              and   column_name = '{1}';
-
-                              if l_nullable = 'N' and l_datatype != '{2}' then
-                                execute immediate 'alter table ""{0}"" modify (""{1}"" {2} {5} {3}  )';
-                              end if;
-                              if l_nullable = 'Y' and l_datatype != '{2}' then
-                                execute immediate 'alter table ""{0}"" modify (""{1}"" {2}  {5} {4} )';
-                              end if;
-                              if l_nullable = 'N' and l_datatype = '{2}' then
-                                execute immediate 'alter table ""{0}"" modify (""{1}"" {5} {3} )';
-                              end if;
-                              if l_nullable = 'Y' and l_datatype = '{2}' then
-                                execute immediate 'alter table ""{0}"" modify (""{1}"" {5} {4} )';
-                              end if;
-                            end;";
-
+                                         l_nullable varchar2(1);
+                                         l_datatype varchar2(106);
+                                        begin
+                                          select 
+                                                nullable into l_nullable
+                                                
+                                          from user_tab_columns
+                                          where table_name = '{0}'
+                                          and   column_name = '{1}';
+            
+                                          select 
+                                                 data_type into l_datatype
+                                          from user_tab_columns
+                                          where table_name = '{0}'
+                                          and   column_name = '{1}';
+            
+                                          if l_nullable = 'N' and l_datatype != '{2}' then
+                                            execute immediate 'alter table {0} modify ({1} {2} {5} {3}  )';
+                                          end if;
+                                          if l_nullable = 'Y' and l_datatype != '{2}' then
+                                            execute immediate 'alter table {0} modify ({1} {2}  {5} {4} )';
+                                          end if;
+                                          if l_nullable = 'N' and l_datatype = '{2}' then
+                                            execute immediate 'alter table {0} modify ({1} {5} {3} )';
+                                          end if;
+                                          if l_nullable = 'Y' and l_datatype = '{2}' then
+                                            execute immediate 'alter table {0} modify ({1} {5} {4} )';
+                                          end if;
+                                        end;";
             query = query.Replace(Environment.NewLine, " ");
             string colN = column.IsNullable ? "NULL" : "";
             string colY = column.IsNullable ? "" : "NOT NULL";

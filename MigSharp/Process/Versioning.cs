@@ -40,7 +40,8 @@ namespace MigSharp.Process
                 {
                     int exists;
                     using (IDbConnection connection = connectionFactory.OpenConnection(connectionInfo))
-                    {
+               
+     {
                         IDbCommand command = connection.CreateCommand();
                         command.CommandTimeout = 0; // do not timeout; the client is responsible for not causing lock-outs
                         command.CommandText = provider.ExistsTable(connection.Database, _versioningTableName);
