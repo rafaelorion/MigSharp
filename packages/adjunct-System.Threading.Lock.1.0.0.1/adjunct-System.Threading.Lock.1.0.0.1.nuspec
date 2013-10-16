@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>adjunct-System.Threading.Lock</id>
+    <version>1.0.0.1</version>
+    <title>System.Threading.Lock</title>
+    <authors>Eddie Garmon</authors>
+    <owners>Eddie Garmon</owners>
+    <licenseUrl>http://adjunct.codeplex.com/license</licenseUrl>
+    <projectUrl>http://adjunct.codeplex.com/</projectUrl>
+    <iconUrl>http://adjunct.codeplex.com/icon</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple multithreading lock</description>
+    <summary>Simple multithreading lock</summary>
+    <tags>Adjunct Threading Lock</tags>
+  </metadata>
+</package>

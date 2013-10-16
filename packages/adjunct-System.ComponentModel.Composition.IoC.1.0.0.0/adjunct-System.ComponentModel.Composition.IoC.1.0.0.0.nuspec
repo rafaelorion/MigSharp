@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>adjunct-System.ComponentModel.Composition.IoC</id>
+    <version>1.0.0.0</version>
+    <title>System.ComponentModel.Composition.IoC</title>
+    <authors>Eddie Garmon</authors>
+    <owners>Eddie Garmon</owners>
+    <licenseUrl>http://adjunct.codeplex.com/license</licenseUrl>
+    <projectUrl>http://adjunct.codeplex.com/</projectUrl>
+    <iconUrl>http://adjunct.codeplex.com/icon</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple 'IoC' container wrapper.</description>
+    <summary>Simple 'IoC' container wrapper.</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>Adjunct MEF IoC Composition DI</tags>
+    <dependencies>
+      <dependency id="adjunct-System.Threading.Lock" version="1.0.0.1" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ComponentModel.Composition" targetFramework="" />
+      <frameworkAssembly assemblyName="System.XML" targetFramework="" />
+      <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="" />
+    </frameworkAssemblies>
+  </metadata>
+</package>
