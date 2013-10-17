@@ -153,8 +153,8 @@ namespace MigSharp.Providers
 
             // drop associated SEQUENCE (if it exists); the TRIGGER is dropped automatically by Oracle
             // Oracle Database Error Code ORA-02289: sequence does not exist
-            yield return string.Format(CultureInfo.InvariantCulture, @"BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE {0}'; EXCEPTION WHEN OTHERS THEN IF SQLCODE = -2289 THEN NULL; ELSE RAISE; END IF; END;", // see: http://frankschmidt.blogspot.com/2009/12/drop-table-if-exists-or-sequence-or.html
-                GetSequenceName(tableName));
+            //yield return string.Format(CultureInfo.InvariantCulture, @"BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE {0}'; EXCEPTION WHEN OTHERS THEN IF SQLCODE = -2289 THEN NULL; ELSE RAISE; END IF; END;", // see: http://frankschmidt.blogspot.com/2009/12/drop-table-if-exists-or-sequence-or.html
+                //GetSequenceName(tableName));
         }
 
         private string GetColumnString(Column column)
