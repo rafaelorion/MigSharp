@@ -213,41 +213,41 @@ namespace MigSharp.Providers
             yield return string.Format(CultureInfo.InvariantCulture, "ALTER TABLE {0} RENAME TO {1}", Escape(oldName), Escape(newName));
 
             // rename sequence if it exists and drop, re-create trigger
-            string oldSequenceName = GetSequenceName(oldName);
-            string newSequenceName = GetSequenceName(newName);
-            string oldTriggerName = GetTriggerName(oldName);
-            yield return string.Format(CultureInfo.InvariantCulture,
-                @"DECLARE
-                    l_idColumn LONG;
-                    l_3rdQuotePos INTEGER;
-                    l_4thQuotePos INTEGER;
-                BEGIN
-                    /* try to rename the sequence - if it does not exists, it will throw 2289 */
-                    EXECUTE IMMEDIATE 'ALTER SEQUENCE {0} NOCACHE'; /* disable caching while renaming the sequence */
-                    EXECUTE IMMEDIATE 'RENAME {0} TO {1}';
-                    EXECUTE IMMEDIATE 'ALTER SEQUENCE {1} CACHE 20';
-
-                    /* drop and re-create the trigger */
-                    SELECT TRIGGER_BODY INTO l_idColumn
-                        FROM USER_TRIGGERS
-                        WHERE TRIGGER_NAME = '{4}';
-                    l_3rdQuotePos := INSTR(l_idColumn, '""', 1, 3);
-                    l_4thQuotePos := INSTR(l_idColumn, '""', 1, 4);
-                    l_idColumn := SUBSTR(l_idColumn, l_3rdQuotePos + 1, l_4thQuotePos - l_3rdQuotePos - 1);
-                    EXECUTE IMMEDIATE 'DROP TRIGGER {2}';
-                    EXECUTE IMMEDIATE '{3}';
-                    EXCEPTION WHEN OTHERS THEN IF SQLCODE = -2289 THEN 
-                        NULL;
-                    ELSE
-                        RAISE;
-                    END IF;
-                END;",
-                Escape(oldSequenceName),
-                Escape(newSequenceName),
-                Escape(oldTriggerName),
-                CreateTrigger(newName, "' || l_idColumn || '", newSequenceName),
-                oldTriggerName
-                ).Replace(Environment.NewLine, " ");
+            //string oldSequenceName = GetSequenceName(oldName);
+            //string newSequenceName = GetSequenceName(newName);
+            //string oldTriggerName = GetTriggerName(oldName);
+//            yield return string.Format(CultureInfo.InvariantCulture,
+//                @"DECLARE
+//                    l_idColumn LONG;
+//                    l_3rdQuotePos INTEGER;
+//                    l_4thQuotePos INTEGER;
+//                BEGIN
+//                    /* try to rename the sequence - if it does not exists, it will throw 2289 */
+//                    EXECUTE IMMEDIATE 'ALTER SEQUENCE {0} NOCACHE'; /* disable caching while renaming the sequence */
+//                    EXECUTE IMMEDIATE 'RENAME {0} TO {1}';
+//                    EXECUTE IMMEDIATE 'ALTER SEQUENCE {1} CACHE 20';
+//
+//                    /* drop and re-create the trigger */
+//                    SELECT TRIGGER_BODY INTO l_idColumn
+//                        FROM USER_TRIGGERS
+//                        WHERE TRIGGER_NAME = '{4}';
+//                    l_3rdQuotePos := INSTR(l_idColumn, '""', 1, 3);
+//                    l_4thQuotePos := INSTR(l_idColumn, '""', 1, 4);
+//                    l_idColumn := SUBSTR(l_idColumn, l_3rdQuotePos + 1, l_4thQuotePos - l_3rdQuotePos - 1);
+//                    EXECUTE IMMEDIATE 'DROP TRIGGER {2}';
+//                    EXECUTE IMMEDIATE '{3}';
+//                    EXCEPTION WHEN OTHERS THEN IF SQLCODE = -2289 THEN 
+//                        NULL;
+//                    ELSE
+//                        RAISE;
+//                    END IF;
+//                END;",
+//                Escape(oldSequenceName),
+//                Escape(newSequenceName),
+//                Escape(oldTriggerName),
+//                CreateTrigger(newName, "' || l_idColumn || '", newSequenceName),
+//                oldTriggerName
+//                ).Replace(Environment.NewLine, " ");
         }
 
         public IEnumerable<string> RenameColumn(string tableName, string oldName, string newName)
