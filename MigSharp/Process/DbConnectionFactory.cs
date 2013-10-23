@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Data.SQLite;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
