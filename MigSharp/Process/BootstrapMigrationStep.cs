@@ -44,8 +44,8 @@ namespace MigSharp.Process
                 }
                 catch (DbException x)
                 {
-                    Log.Error("An error occurred: {0}{1}while trying to execute:{1}{2}", x.Message, Environment.NewLine, command.CommandText);
-                    throw;
+                    Log.Error("An error occurred: {0}{1}while trying to execute:{1}{2}{1}{3}", x.Message, Environment.NewLine, command.CommandText,_migration.GetType().ToString());
+                    throw new Exception(String.Format("An error occurred: {0}{1}while trying to execute:{1}{2}{1}Migration: {3}", x.Message, Environment.NewLine, command.CommandText, _migration.GetType()));
                 }
             }
         }
