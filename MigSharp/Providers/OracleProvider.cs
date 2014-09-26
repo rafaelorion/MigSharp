@@ -270,14 +270,14 @@ namespace MigSharp.Providers
                                                 nullable into l_nullable
                                                 
                                           from user_tab_columns
-                                          where table_name = '{0}'
-                                          and   column_name = '{1}';
+                                          where upper(table_name) = upper('{0}')
+                                          and   upper(column_name) = upper('{1}');
             
                                           select 
                                                  data_type into l_datatype
                                           from user_tab_columns
-                                          where table_name = '{0}'
-                                          and   column_name = '{1}';
+                                          where upper(table_name) = upper('{0}')
+                                          and   upper(column_name) = upper('{1}');
             
                                           if l_nullable = 'N' and l_datatype != '{2}' then
                                             execute immediate 'alter table {0} modify ({1} {2} {5} {3}  )';
